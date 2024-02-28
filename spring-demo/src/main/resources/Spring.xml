@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		https://www.springframework.org/schema/context/spring-context.xsd"
+	xmlns:context="http://www.springframework.org/schema/context">
+
+	<context:annotation-config/>
+	<context:component-scan base-package="com.learnjava.springframework"></context:component-scan>
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>MyMessages</value>
+			</list>
+		</property>
+	</bean>
+		
+		<!--bean class="com.learnjava.springframework.DisplayNameBeanPostProcessor" /!-->
+		<bean class="com.learnjava.springframework.MyBeanFactoryPostProcessor" />
+		
+		<!-- This gets called before a BeanFactoryPostProcessor is called -->
+		<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<property name="locations" value="pointsconfig.properties" />
+		</bean>
+		
+		<!--bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" /!-->
+		
+		<!--bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/!-->
+		<!--property name="type" value="Equilateral" /!-->
+		<!--constructor-arg type="String" value = "Equilateral" />
+		<constructor-arg type="Integer" value = "20" /!-->
+		<!--constructor-arg index="1" value="20" />
+		<constructor-arg index="0" value="Equilateral"/!-->
+		
+	<!--bean id="parent-triangle" class="com.learnjava.springframework.Triangle">
+		<property name="pointA" ref="pointA" />
+	</bean !-->
+	
+	<!--bean id="triangle1" class="com.learnjava.springframework.Triangle" parent="parent-triangle">
+		<property name="pointB" ref="pointB" />
+		<property name="pointC" ref="pointC" />
+	</bean!-->
+	
+	<!--bean id="parent-triangle" class="com.learnjava.springframework.Triangle" abstract="true">
+		<property name="points">
+		<list>
+			<ref bean="pointA" />
+		</list>
+		</property>
+	</bean>
+	
+	<bean id="triangle1" class="com.learnjava.springframework.Triangle" parent="parent-triangle">
+		<property name="points">
+		<list merge="true">
+			<ref bean="pointB" />
+			<ref bean="pointC" />
+		</list>
+		</property>
+	</bean!-->
+	
+	<bean id="pointB" class="com.learnjava.springframework.Point">
+		<property name="x" value="-20" />
+		<property name="y" value="20" />
+	</bean>
+	
+	<bean id="pointC" class="com.learnjava.springframework.Point">
+		<property name="x" value="20" />
+		<property name="y" value="0" />
+	</bean>
+	
+	<!-- Autowiring byType works if only one single member variable of one given type -->
+	<!-- Autowiring byConstructor works again if only one single member variable of one given types -->
+	<bean id="triangle" class="com.learnjava.springframework.Triangle" name="triangle-name" autowire="byName" scope="singleton">
+		
+		
+		<!-- To enforce bean ID usage and not an alias or other name !-->
+		<!--property name="pointA">
+			<ref bean="zeroPoint" />
+		</property> 
+		
+		<property name="pointB"!-->
+			<!-- Inner Bean, no id required, not to be used anywhere else except for this triangle object !-->
+			<!--bean class="com.learnjava.springframework.Point">
+				<property name="x" value="-20" />
+				<property name="y" value="20" />
+			</bean>
+		</property>
+		
+		<property name="pointC">
+			<bean class="com.learnjava.springframework.Point">
+				<property name="x" value="20" />
+				<property name="y" value="0" />
+			</bean>
+		</property!-->	
+			
+	</bean>
+	
+	<!--bean id="circle" class="com.learnjava.springframework.Circle">
+		<property name="center" ref="pointA" />
+	</bean!-->
+	
+	
+	<bean id="pointA" class="com.learnjava.springframework.Point">
+		<qualifier value="circleRelated" />
+		<!--property name="x" value="0" />
+		<property name="y" value="20" /!-->
+		<property name="x" value="${pointA.pointX}"/>
+		<property name="y" value="${pointA.pointY}"/>
+	</bean>
+	
+	<alias name="triangle" alias="triangle-alias" />
+	
+</beans>
+
+
